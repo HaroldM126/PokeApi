@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getPokemonDetails } from '../services/pokemonService';
 
-function PokemonCard({ pokemonName }) {
+function PokemonCard({ pokemonName, index = 0 }) {
   const [pokemon, setPokemon] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,14 +54,17 @@ function PokemonCard({ pokemonName }) {
   }
 
   return (
-    <article className="pokemon-card">
+    <article className="pokemon-card" style={{ '--card-delay': `${index * 45}ms` }}>
+      <div className="card-topline">
+        <span className="card-index">N.º {String(pokemon.id).padStart(3, '0')}</span>
+        <span className="card-pip" aria-hidden="true" />
+      </div>
       <img
         src={pokemon.sprites.front_default}
         alt={`Ilustración de ${pokemon.name}`}
         className="pokemon-image"
       />
       <h2>
-        <span>#{String(pokemon.id).padStart(3, '0')}</span>{' '}
         {pokemon.name}
       </h2>
       <p className="pokemon-types">

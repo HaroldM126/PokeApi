@@ -48,20 +48,48 @@ function App() {
   return (
     <main className="app-shell">
       <header className="app-header">
-        <p className="eyebrow">PokéAPI · catálogo en tiempo real</p>
-        <h1>Pokédex</h1>
-        <p>Explora los primeros registros y encuentra tu Pokémon favorito.</p>
+        <div className="brand-lockup">
+          <span className="brand-mark" aria-hidden="true">
+            <span />
+          </span>
+          <span className="brand-name">Poke<span>dex</span></span>
+        </div>
+        <div className="hero-copy">
+          <div className="hero-kicker">
+            <span className="signal-dot" />
+            Centro de exploración · datos en vivo
+          </div>
+          <h1>
+            Atrápalos
+            <span> todos.</span>
+          </h1>
+          <p>Tu archivo de campo para descubrir, comparar y reconocer cada Pokémon.</p>
+        </div>
+        <div className="hero-orbit" aria-hidden="true">
+          <div className="orbit orbit-one" />
+          <div className="orbit orbit-two" />
+          <div className="hero-ball"><span /></div>
+          <span className="spark spark-one">✦</span>
+          <span className="spark spark-two">✦</span>
+        </div>
       </header>
 
       <section className="search-panel" aria-label="Búsqueda de Pokémon">
-        <label htmlFor="pokemon-search">Buscar por nombre</label>
-        <input
-          id="pokemon-search"
-          type="search"
-          placeholder="Ej. pikachu"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
+        <div className="search-label">
+          <label htmlFor="pokemon-search">Explora el archivo</label>
+          <span>01 — 20</span>
+        </div>
+        <div className="search-field">
+          <span className="search-icon" aria-hidden="true">⌕</span>
+          <input
+            id="pokemon-search"
+            type="search"
+            placeholder="Busca por nombre..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+          <kbd>⌘ K</kbd>
+        </div>
       </section>
 
       {loading && (
@@ -77,14 +105,23 @@ function App() {
       )}
 
       {!loading && !error && (
-        <section className="pokemon-grid" aria-live="polite">
-          {filteredPokemons.length > 0 ? (
-            filteredPokemons.map((pokemon) => (
-              <PokemonCard key={pokemon.name} pokemonName={pokemon.name} />
-            ))
-          ) : (
-            <p className="state-message">No se encontraron coincidencias.</p>
-          )}
+        <section className="catalog-section" aria-live="polite">
+          <div className="catalog-heading">
+            <div>
+              <p className="section-eyebrow">Dex nacional / registros</p>
+              <h2>{search ? 'Resultados de búsqueda' : 'Primeros avistamientos'}</h2>
+            </div>
+            <span className="result-count">{filteredPokemons.length} encontrados</span>
+          </div>
+          <div className="pokemon-grid">
+            {filteredPokemons.length > 0 ? (
+              filteredPokemons.map((pokemon, index) => (
+                <PokemonCard key={pokemon.name} pokemonName={pokemon.name} index={index} />
+              ))
+            ) : (
+              <p className="state-message">No se encontraron coincidencias.</p>
+            )}
+          </div>
         </section>
       )}
     </main>
