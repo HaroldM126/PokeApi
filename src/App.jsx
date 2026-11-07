@@ -7,6 +7,7 @@ function App() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -36,7 +37,7 @@ function App() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [retryCount]);
 
   const filteredPokemons = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -60,10 +61,9 @@ function App() {
             Centro de exploración · datos en vivo
           </div>
           <h1>
-            Atrápalos
-            <span> todos.</span>
+            Pokédex
           </h1>
-          <p>Tu archivo de campo para descubrir, comparar y reconocer cada Pokémon.</p>
+          <p>Tu archivo de campo para descubrir, comparar y reconocerlos a todos.</p>
         </div>
         <div className="hero-orbit" aria-hidden="true">
           <div className="orbit orbit-one" />
@@ -93,15 +93,40 @@ function App() {
       </section>
 
       {loading && (
-        <p className="state-message" aria-live="polite">
-          Cargando datos desde el servidor...
-        </p>
+        <section className="loading-section" aria-live="polite" aria-label="Cargando Pokémon">
+          <div className="loading-heading">
+            <span className="loading-ball" aria-hidden="true" />
+            <div>
+              <p className="section-eyebrow">Sincronizando Pokédex</p>
+              <p className="loading-copy">Buscando nuevos avistamientos...</p>
+            </div>
+          </div>
+          <div className="pokemon-grid skeleton-grid">
+            {Array.from({ length: 8 }, (_, index) => (
+              <article className="pokemon-card skeleton-card" key={index} aria-hidden="true">
+                <span className="skeleton skeleton-line short" />
+                <span className="skeleton skeleton-orb" />
+                <span className="skeleton skeleton-line" />
+                <span className="skeleton skeleton-line small" />
+                <span className="skeleton skeleton-line stats" />
+              </article>
+            ))}
+          </div>
+        </section>
       )}
 
       {error && (
-        <p className="state-message error-message" role="alert">
-          Error: {error}
-        </p>
+        <section className="error-panel" role="alert">
+          <span className="error-icon" aria-hidden="true">!</span>
+          <div>
+            <p className="section-eyebrow">Señal interrumpida</p>
+            <h2>No pudimos cargar los avistamientos</h2>
+            <p>{error}</p>
+            <button type="button" className="retry-button" onClick={() => setRetryCount((count) => count + 1)}>
+              <span aria-hidden="true">↻</span> Reintentar
+            </button>
+          </div>
+        </section>
       )}
 
       {!loading && !error && (
